@@ -4,18 +4,27 @@ import AudioList from "../screens/AudioList";
 import Player from "../screens/Player";
 import PlayList from "../screens/PlayList";
 import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { View, Text } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{ headerShown: false, tabBarShowLabel: false }}
+    >
       <Tab.Screen
         name="AudioList"
         component={AudioList}
         options={{
-          tabBarIcon: (color, size) => {
-            return <Ionicons name="headset" size={20} color={color} />;
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <Ionicons
+                name="headset"
+                size={20}
+                color={focused ? "blue" : "#000"}
+              />
+            );
           },
         }}
       />
@@ -24,8 +33,14 @@ const AppNavigator = () => {
         name="Player"
         component={Player}
         options={{
-          tabBarIcon: (color, size) => {
-            return <FontAwesome5 name="compact-disc" size={20} color={color} />;
+          tabBarIcon: ({ focused }) => {
+            return (
+              <FontAwesome5
+                name="compact-disc"
+                size={20}
+                color={focused ? "blue" : "#000"}
+              />
+            );
           },
         }}
       />
@@ -34,9 +49,13 @@ const AppNavigator = () => {
         name="PlayList"
         component={PlayList}
         options={{
-          tabBarIcon: (color, size) => {
+          tabBarIcon: ({ focused }) => {
             return (
-              <MaterialIcons name="my-library-music" size={20} color={color} />
+              <MaterialIcons
+                name="my-library-music"
+                size={20}
+                color={focused ? "blue" : "#000"}
+              />
             );
           },
         }}

@@ -2,7 +2,7 @@ import React from "react";
 import * as S from "./audio.style";
 import { Image } from "react-native";
 
-const AudioComponent = ({ name }) => {
+const AudioComponent = ({ name, albumId, uri }) => {
   return (
     <S.Wrapper>
       <S.Image>

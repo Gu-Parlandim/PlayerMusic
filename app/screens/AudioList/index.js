@@ -6,8 +6,14 @@ import { AudioContext } from "../../context/AudioProvider";
 
 const AudioList = () => {
   const { assets } = useContext(AudioContext);
-  const renderItem = ({ item }) => <AudioComponent name={item.filename} />;
-  console.log(assets);
+  const renderItem = ({ item }) => (
+    <AudioComponent
+      name={item.filename}
+      albumId={item.albumId}
+      uri={item.uri}
+    />
+  );
+  //console.log(assets);
 
   return (
     <S.Wrapper>
