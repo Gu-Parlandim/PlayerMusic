@@ -1,18 +1,23 @@
 import React from "react";
 import * as S from "./audio.style";
-import { Image } from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const AudioComponent = ({ name, albumId, uri }) => {
+  const { colors } = useTheme();
+
   return (
-    <S.Wrapper>
-      <S.Image>
-        <Image
-          source={require("../../assets/images/music.png")}
-          style={{ width: "100%", height: "100%" }}
-        />
-      </S.Image>
-      <S.Title>{name}</S.Title>
-    </S.Wrapper>
+    <SafeAreaView>
+      <S.Wrapper>
+        <MaterialCommunityIcons name="music-circle" size={30} color="#fff" />
+
+        <S.WrapperText>
+          <S.Title color={colors.text}>{name}</S.Title>
+          <S.Span color={colors.text}>Album: "undetermined"</S.Span>
+        </S.WrapperText>
+      </S.Wrapper>
+    </SafeAreaView>
   );
 };
 

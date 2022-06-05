@@ -4,21 +4,28 @@ export const Wrapper = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  border-radius: 20px;
-  background-color: #fff;
-  box-shadow: 1px 1px 5px #000;
-  width: 95%;
+  background-color: transparent;
+  width: 100%;
   margin: 5px 0;
   justify-content: flex-start;
-`;
-
-export const Image = styled.View`
-  width: 50px;
-  height: 50px;
   padding: 5px;
 `;
 
-export const Title = styled.Text`
+export const WrapperText = styled.View`
+  flex-direction: column;
+  align-items: flex-start;
   margin-left: 10px;
+  width: 100%;
+`;
+
+export const Title = styled.Text`
   font-size: 18px;
+  color: ${({ color }) => color};
+  flex-wrap: wrap;
+  max-width: 80%;
+  justify-content: center;
+`;
+
+export const Span = styled.Text`
+  color: ${({ color }) => color};
 `;

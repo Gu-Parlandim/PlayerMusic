@@ -15,6 +15,7 @@ const AudioProvider = ({ children }) => {
   const getAudioFiles = async () => {
     const media = await MediaLibrary.getAssetsAsync({
       mediaType: "audio",
+      first: 30,
     });
 
     setMediaList(media);

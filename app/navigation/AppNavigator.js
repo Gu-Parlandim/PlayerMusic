@@ -4,63 +4,79 @@ import AudioList from "../screens/AudioList";
 import Player from "../screens/Player";
 import PlayList from "../screens/PlayList";
 import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import { View, Text } from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { BlurView } from "expo-blur";
+import { StatusBar } from "react-native";
+import HeaderHome from "../components/HeaderHome";
 
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
+  const { colors } = useTheme();
+
   return (
-    <Tab.Navigator
-      screenOptions={{ headerShown: false, tabBarShowLabel: false }}
-    >
-      <Tab.Screen
-        name="AudioList"
-        component={AudioList}
-        options={{
-          tabBarIcon: ({ focused, color, size }) => {
-            return (
-              <Ionicons
-                name="headset"
-                size={20}
-                color={focused ? "blue" : "#000"}
-              />
-            );
+    <>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: "#1C1A31",
           },
         }}
-      />
+      >
+        <Tab.Screen
+          name="AudioList"
+          component={AudioList}
+          options={{
+            tabBarIcon: ({ focused, color, size }) => {
+              return (
+                <Ionicons
+                  name="headset"
+                  size={25}
+                  color={focused ? colors.text : "#000"}
+                />
+              );
+            },
+            headerShown: true,
+            header: HeaderHome,
+          }}
+        />
 
-      <Tab.Screen
-        name="Player"
-        component={Player}
-        options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <FontAwesome5
-                name="compact-disc"
-                size={20}
-                color={focused ? "blue" : "#000"}
-              />
-            );
-          },
-        }}
-      />
+        <Tab.Screen
+          name="Player"
+          component={Player}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <FontAwesome5
+                  name="compact-disc"
+                  size={25}
+                  color={focused ? colors.text : "#000"}
+                />
+              );
+            },
+          }}
+        />
 
-      <Tab.Screen
-        name="PlayList"
-        component={PlayList}
-        options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <MaterialIcons
-                name="my-library-music"
-                size={20}
-                color={focused ? "blue" : "#000"}
-              />
-            );
-          },
-        }}
-      />
-    </Tab.Navigator>
+        <Tab.Screen
+          name="PlayList"
+          component={PlayList}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <MaterialIcons
+                  name="my-library-music"
+                  size={25}
+                  color={focused ? colors.text : "#000"}
+                />
+              );
+            },
+          }}
+        />
+      </Tab.Navigator>
+    </>
   );
 };
 
