@@ -5,7 +5,6 @@ import Player from "../screens/Player";
 import PlayList from "../screens/PlayList";
 import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
-import { BlurView } from "expo-blur";
 import { StatusBar } from "react-native";
 import HeaderHome from "../components/HeaderHome";
 
@@ -35,7 +34,7 @@ const AppNavigator = () => {
                 <Ionicons
                   name="headset"
                   size={25}
-                  color={focused ? colors.text : "#000"}
+                  color={focused ? colors.text : colors.primary}
                 />
               );
             },
@@ -53,7 +52,7 @@ const AppNavigator = () => {
                 <FontAwesome5
                   name="compact-disc"
                   size={25}
-                  color={focused ? colors.text : "#000"}
+                  color={focused ? colors.text : colors.primary}
                 />
               );
             },
@@ -69,7 +68,7 @@ const AppNavigator = () => {
                 <MaterialIcons
                   name="my-library-music"
                   size={25}
-                  color={focused ? colors.text : "#000"}
+                  color={focused ? colors.text : colors.primary}
                 />
               );
             },

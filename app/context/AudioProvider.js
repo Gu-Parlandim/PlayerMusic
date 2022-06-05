@@ -6,16 +6,17 @@ export const AudioContext = createContext({});
 
 const AudioProvider = ({ children }) => {
   const [mediaList, setMediaList] = useState([]);
-  /* {
-        "canAskAgain": true, 
-        "expires": "never", 
-        "granted": false, 
-        "status": "undetermined"
-    } */
+  const [getEndCursor, setEndCursor] = useState();
+
+  function nextPage() {
+    setEndCursor(mediaList.endCursor);
+  }
+
   const getAudioFiles = async () => {
     const media = await MediaLibrary.getAssetsAsync({
       mediaType: "audio",
       first: 30,
+      after: getEndCursor,
     });
 
     setMediaList(media);
@@ -67,8 +68,14 @@ const AudioProvider = ({ children }) => {
     getPermission();
   }, []);
 
+  useEffect(() => {
+    getAudioFiles();
+  }, [getEndCursor]);
+
   return (
-    <AudioContext.Provider value={mediaList}>{children}</AudioContext.Provider>
+    <AudioContext.Provider value={[mediaList, nextPage]}>
+      {children}
+    </AudioContext.Provider>
   );
 };
 
