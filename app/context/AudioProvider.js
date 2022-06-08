@@ -5,21 +5,22 @@ import { Text, Alert } from "react-native";
 export const AudioContext = createContext({});
 
 const AudioProvider = ({ children }) => {
-  const [mediaList, setMediaList] = useState([]);
-  const [getEndCursor, setEndCursor] = useState();
-
-  function nextPage() {
-    setEndCursor(mediaList.endCursor);
-  }
+  const [endPage, setEndPage] = useState(null);
+  const [audiosList, setAudiosList] = useState([]);
 
   const getAudioFiles = async () => {
-    const media = await MediaLibrary.getAssetsAsync({
+    MediaLibrary.getAssetsAsync({
       mediaType: "audio",
-      first: 30,
-      after: getEndCursor,
-    });
-
-    setMediaList(media);
+    })
+      .then(({ totalCount }) => {
+        MediaLibrary.getAssetsAsync({
+          mediaType: "audio",
+          first: totalCount,
+        }).then((media) => {
+          setAudiosList(media);
+        });
+      })
+      .catch((error) => console.log(error));
   };
 
   const getPermission = async () => {
@@ -68,12 +69,8 @@ const AudioProvider = ({ children }) => {
     getPermission();
   }, []);
 
-  useEffect(() => {
-    getAudioFiles();
-  }, [getEndCursor]);
-
   return (
-    <AudioContext.Provider value={[mediaList, nextPage]}>
+    <AudioContext.Provider value={[audiosList, getAudioFiles]}>
       {children}
     </AudioContext.Provider>
   );

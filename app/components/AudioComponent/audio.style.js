@@ -15,17 +15,24 @@ export const WrapperText = styled.View`
   flex-direction: column;
   align-items: flex-start;
   margin-left: 10px;
-  width: 100%;
+  width: 79%;
 `;
 
 export const Title = styled.Text`
   font-size: 18px;
   color: ${({ color }) => color};
   flex-wrap: wrap;
-  max-width: 80%;
+  width: 100%;
   justify-content: center;
 `;
 
 export const Span = styled.Text`
-  color: ${({ color }) => color};
+  color: #f2f2f2;
+  font-size: 14px;
+`;
+
+export const Pressable = styled.Pressable`
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
 `;

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { memo } from "react";
 import * as S from "./audio.style";
 import { useTheme } from "@react-navigation/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import convertTime from "../../services/convertTime";
 
-const AudioComponent = ({ name, albumId, uri }) => {
+const AudioComponent = ({ name, albumId, uri, minute }) => {
   const { colors } = useTheme();
 
   return (
@@ -13,12 +14,18 @@ const AudioComponent = ({ name, albumId, uri }) => {
         <MaterialCommunityIcons name="music-circle" size={30} color="#fff" />
 
         <S.WrapperText>
-          <S.Title color={colors.text}>{name}</S.Title>
-          <S.Span color={colors.text}>Album: "undetermined"</S.Span>
+          <S.Title numberOfLines={1} color={colors.text}>
+            {name}
+          </S.Title>
+          <S.Span color={colors.text}>{convertTime(minute)}</S.Span>
         </S.WrapperText>
+
+        <S.Pressable>
+          <Feather name="more-vertical" size={30} color="#fff" />
+        </S.Pressable>
       </S.Wrapper>
     </SafeAreaView>
   );
 };
 
-export default AudioComponent;
+export default memo(AudioComponent);

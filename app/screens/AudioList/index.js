@@ -1,33 +1,54 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import * as S from "./audioList.style";
-import { Button, FlatList, Text } from "react-native";
+import {
+  Text,
+  VirtualizedList,
+  View,
+  StyleSheet,
+  StatusBar,
+} from "react-native";
 import AudioComponent from "../../components/AudioComponent";
 import { AudioContext } from "../../context/AudioProvider";
 import { useTheme } from "@react-navigation/native";
+import getAudiosMP3 from "../../services/getAudiosMP3";
 
 const AudioList = () => {
   const { colors } = useTheme();
+  const [audiosList, getAudioFiles] = useContext(AudioContext);
+  const [media, setMedia] = useState([]);
 
-  const [mediaList, nextPage] = useContext(AudioContext);
+  const getItem = (data, index) => data[index];
+  const getItemCount = (data) => data.length;
 
-  const renderItem = ({ item }) => (
-    <AudioComponent
-      name={item.filename}
-      albumId={item.albumId}
-      uri={item.uri}
-    />
-  );
-  //console.log(assets);
+  useEffect(() => {
+    if (audiosList.assets) {
+      setMedia(getAudiosMP3(audiosList.assets));
+    }
+  }, [audiosList]);
+
+  function renderItem({ item }) {
+    return <AudioComponent name={item.filename} minute={item.duration} />;
+  }
 
   return (
     <S.Wrapper color={colors.background}>
-      <FlatList
-        data={mediaList.assets}
+      {/*  <FlatList
+        data={media}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-      />
+        initialNumToRender={10}
+      /> */}
 
-      <Button title="Me bata" onPress={() => nextPage()} />
+      {media.length > 0 && (
+        <VirtualizedList
+          data={media}
+          initialNumToRender={5}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          getItemCount={getItemCount}
+          getItem={getItem}
+        />
+      )}
     </S.Wrapper>
   );
 };

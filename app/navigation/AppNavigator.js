@@ -3,10 +3,17 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AudioList from "../screens/AudioList";
 import Player from "../screens/Player";
 import PlayList from "../screens/PlayList";
-import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  FontAwesome5,
+  FontAwesome,
+  MaterialIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
-import { StatusBar } from "react-native";
+import { StatusBar, Text } from "react-native";
 import HeaderHome from "../components/HeaderHome";
+import TabBarLabel from "../components/TabBarLabel";
 
 const Tab = createBottomTabNavigator();
 
@@ -19,22 +26,31 @@ const AppNavigator = () => {
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
-          tabBarShowLabel: false,
+          tabBarShowLabel: true,
           tabBarStyle: {
             backgroundColor: "#1C1A31",
           },
         }}
       >
         <Tab.Screen
-          name="AudioList"
+          name="Lista de musica"
           component={AudioList}
           options={{
-            tabBarIcon: ({ focused, color, size }) => {
+            tabBarIcon: ({ focused }) => {
               return (
-                <Ionicons
-                  name="headset"
+                <MaterialCommunityIcons
+                  name="music-box-multiple"
                   size={25}
                   color={focused ? colors.text : colors.primary}
+                />
+              );
+            },
+            tabBarLabel: ({ focused }) => {
+              return (
+                <TabBarLabel
+                  color={focused ? colors.text : colors.primary}
+                  text={"Lista de musica"}
+                  size="10px"
                 />
               );
             },
@@ -56,6 +72,15 @@ const AppNavigator = () => {
                 />
               );
             },
+            tabBarLabel: ({ focused }) => {
+              return (
+                <TabBarLabel
+                  color={focused ? colors.text : colors.primary}
+                  text={"Player"}
+                  size="10px"
+                />
+              );
+            },
           }}
         />
 
@@ -65,10 +90,44 @@ const AppNavigator = () => {
           options={{
             tabBarIcon: ({ focused }) => {
               return (
-                <MaterialIcons
-                  name="my-library-music"
+                <MaterialCommunityIcons
+                  name="playlist-music"
+                  size={35}
+                  color={focused ? colors.text : colors.primary}
+                />
+              );
+            },
+            tabBarLabel: ({ focused }) => {
+              return (
+                <TabBarLabel
+                  color={focused ? colors.text : colors.primary}
+                  text="PlayList"
+                  size="10px"
+                />
+              );
+            },
+          }}
+        />
+
+        <Tab.Screen
+          name="Favoritas"
+          component={PlayList}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <FontAwesome
+                  name="heart"
                   size={25}
                   color={focused ? colors.text : colors.primary}
+                />
+              );
+            },
+            tabBarLabel: ({ focused }) => {
+              return (
+                <TabBarLabel
+                  color={focused ? colors.text : colors.primary}
+                  text="Favoritas"
+                  size="10px"
                 />
               );
             },
