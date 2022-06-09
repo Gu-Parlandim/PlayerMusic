@@ -2,6 +2,7 @@ import React, { useEffect, createContext, useState } from "react";
 import * as MediaLibrary from "expo-media-library";
 import permissionAlert from "../services/permissionAlert";
 import getPermission from "../services/getPermission";
+import getAudiosMP3 from "../services/getAudiosMP3";
 
 export const AudioContext = createContext({});
 
@@ -11,7 +12,20 @@ const AudioProvider = ({ children }) => {
     playBackObj: null,
     soundObjt: null,
     currentAudio: {},
+    currentAudioIndex: null,
+    isPlaying: false,
   });
+
+  function orderArray(a, b) {
+    if (a.filename > b.filename) {
+      return 1;
+    }
+    if (a.filename < b.filename) {
+      return -1;
+    }
+    // a must be equal to b
+    return 0;
+  }
 
   const getAudioFiles = async () => {
     MediaLibrary.getAssetsAsync({
@@ -22,7 +36,8 @@ const AudioProvider = ({ children }) => {
           mediaType: "audio",
           first: totalCount,
         }).then((media) => {
-          setAudiosList(media);
+          const arrayWithOnlyMp3 = getAudiosMP3(media.assets);
+          setAudiosList(arrayWithOnlyMp3.sort(orderArray));
         });
       })
       .catch((error) => console.log(error));
@@ -32,10 +47,19 @@ const AudioProvider = ({ children }) => {
     getPermission(permissionAlert, getAudioFiles);
   }, []);
 
-  const { playBackObj, soundObjt, currentAudio } = audioStates;
+  const { playBackObj, soundObjt, currentAudio, isPlaying, currentAudioIndex } =
+    audioStates;
   return (
     <AudioContext.Provider
-      value={[audiosList, playBackObj, soundObjt, currentAudio, setAudioStates]}
+      value={[
+        audiosList,
+        playBackObj,
+        soundObjt,
+        currentAudio,
+        setAudioStates,
+        isPlaying,
+        currentAudioIndex,
+      ]}
     >
       {children}
     </AudioContext.Provider>

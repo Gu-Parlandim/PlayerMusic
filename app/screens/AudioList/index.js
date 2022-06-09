@@ -1,12 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import * as S from "./audioList.style";
-import {
-  Text,
-  VirtualizedList,
-  View,
-  StyleSheet,
-  StatusBar,
-} from "react-native";
+import { VirtualizedList } from "react-native";
 import AudioComponent from "../../components/AudioComponent";
 import { AudioContext } from "../../context/AudioProvider";
 import { useTheme } from "@react-navigation/native";
@@ -17,8 +11,15 @@ import { play, pause, resume, playNext } from "../../services/audioController";
 
 const AudioList = () => {
   const { colors } = useTheme();
-  const [audiosList, playBackObj, soundObjt, currentAudio, setAudioStates] =
-    useContext(AudioContext);
+  const [
+    audiosList,
+    playBackObj,
+    soundObjt,
+    currentAudio,
+    setAudioStates,
+    isPlaying,
+    currentAudioIndex,
+  ] = useContext(AudioContext);
 
   const [media, setMedia] = useState([]);
   const [modalIsVisible, setModalIsVisible] = useState({
@@ -27,7 +28,7 @@ const AudioList = () => {
   const [currentItem, setCurrentItem] = useState({});
 
   const getItem = (data, index) => data[index];
-  const getItemCount = (data) => 10;
+  const getItemCount = (data) => 20;
 
   const handleOnClose = () => {
     setModalIsVisible({ ...modalIsVisible, optionModalVisible: false });
@@ -48,6 +49,8 @@ const AudioList = () => {
           currentAudio: audio,
           playBackObj: playBackObj,
           soundObjt: status,
+          isPlaying: true,
+          currentAudioIndex: audio.id,
         };
       });
     }
@@ -64,6 +67,7 @@ const AudioList = () => {
         return {
           ...current,
           soundObjt: status,
+          isPlaying: false,
         };
       });
     }
@@ -76,6 +80,7 @@ const AudioList = () => {
         return {
           ...current,
           soundObjt: status,
+          isPlaying: true,
         };
       });
     }
@@ -90,14 +95,16 @@ const AudioList = () => {
           currentAudio: audio,
           playBackObj: playBackObj,
           soundObjt: status,
+          isPlaying: true,
+          currentAudioIndex: audio.id,
         };
       });
     }
   };
 
   useEffect(() => {
-    if (audiosList.assets) {
-      setMedia(getAudiosMP3(audiosList.assets));
+    if (audiosList) {
+      setMedia(getAudiosMP3(audiosList));
     }
   }, [audiosList]);
 
@@ -106,6 +113,8 @@ const AudioList = () => {
       <AudioComponent
         name={item.filename}
         minute={item.duration}
+        activeListItem={item.id === currentAudioIndex}
+        isPlaying={isPlaying}
         onAudioPress={() => handleAudioPress(item)}
         onOptionPress={() => {
           setCurrentItem(item);
