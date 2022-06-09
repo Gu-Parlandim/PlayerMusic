@@ -13,7 +13,7 @@ import { useTheme } from "@react-navigation/native";
 import getAudiosMP3 from "../../services/getAudiosMP3";
 import OptionModal from "../../components/OptionModal";
 import { Audio } from "expo-av";
-import { play, pause, resume } from "../../services/audioController";
+import { play, pause, resume, playNext } from "../../services/audioController";
 
 const AudioList = () => {
   const { colors } = useTheme();
@@ -34,9 +34,10 @@ const AudioList = () => {
   };
 
   const handleAudioPress = async (audio) => {
+    const { uri } = audio;
+
     //Play
     if (soundObjt === null) {
-      const { uri } = audio;
       const playBackObj = new Audio.Sound();
 
       const status = await play(playBackObj, uri);
@@ -79,7 +80,19 @@ const AudioList = () => {
       });
     }
 
-    //
+    //another audio
+    if (soundObjt.isLoaded && currentAudio.id !== audio.id) {
+      const status = await playNext(playBackObj, uri);
+
+      return setAudioStates((current) => {
+        return {
+          ...current,
+          currentAudio: audio,
+          playBackObj: playBackObj,
+          soundObjt: status,
+        };
+      });
+    }
   };
 
   useEffect(() => {

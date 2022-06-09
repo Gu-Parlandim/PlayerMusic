@@ -26,3 +26,14 @@ export const resume = async (playBackObj) => {
     console.log("error:", error.message);
   }
 };
+
+export const playNext = async (playBackObj, uri) => {
+  try {
+    await playBackObj.stopAsync();
+    await playBackObj.unloadAsync();
+
+    return await play(playBackObj, uri);
+  } catch (error) {
+    console.log("error:", error.message);
+  }
+};
