@@ -1,12 +1,17 @@
 import React, { useEffect, createContext, useState } from "react";
 import * as MediaLibrary from "expo-media-library";
-import { Text, Alert } from "react-native";
+import permissionAlert from "../services/permissionAlert";
+import getPermission from "../services/getPermission";
 
 export const AudioContext = createContext({});
 
 const AudioProvider = ({ children }) => {
-  const [endPage, setEndPage] = useState(null);
   const [audiosList, setAudiosList] = useState([]);
+  const [audioStates, setAudioStates] = useState({
+    playBackObj: null,
+    soundObjt: null,
+    currentAudio: {},
+  });
 
   const getAudioFiles = async () => {
     MediaLibrary.getAssetsAsync({
@@ -23,54 +28,15 @@ const AudioProvider = ({ children }) => {
       .catch((error) => console.log(error));
   };
 
-  const getPermission = async () => {
-    const { canAskAgain, expires, granted, status } =
-      await MediaLibrary.getPermissionsAsync();
-
-    if (granted) {
-      getAudioFiles();
-    }
-
-    if (!granted && canAskAgain) {
-      const { status, canAskAgain } =
-        await MediaLibrary.requestPermissionsAsync();
-
-      if (status === "denied") {
-        permissionAlert();
-      }
-
-      if (status === "granted") {
-        getAudioFiles();
-      }
-
-      if (status == -"denied" && !canAskAgain) {
-      }
-    }
-  };
-
-  const permissionAlert = () => {
-    Alert.alert(
-      "Permissão necessaria",
-      "Esse aplicativo precissa da perimissão para acessear os arquivos de audio",
-      [
-        {
-          text: "Permitir",
-          onPress: () => getPermission(),
-        },
-        {
-          text: "cancelar",
-          onPress: () => permissionAlert(),
-        },
-      ]
-    );
-  };
-
   useEffect(() => {
-    getPermission();
+    getPermission(permissionAlert, getAudioFiles);
   }, []);
 
+  const { playBackObj, soundObjt, currentAudio } = audioStates;
   return (
-    <AudioContext.Provider value={[audiosList, getAudioFiles]}>
+    <AudioContext.Provider
+      value={[audiosList, playBackObj, soundObjt, currentAudio, setAudioStates]}
+    >
       {children}
     </AudioContext.Provider>
   );

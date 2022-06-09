@@ -11,14 +11,76 @@ import AudioComponent from "../../components/AudioComponent";
 import { AudioContext } from "../../context/AudioProvider";
 import { useTheme } from "@react-navigation/native";
 import getAudiosMP3 from "../../services/getAudiosMP3";
+import OptionModal from "../../components/OptionModal";
+import { Audio } from "expo-av";
+import { play, pause, resume } from "../../services/audioController";
 
 const AudioList = () => {
   const { colors } = useTheme();
-  const [audiosList, getAudioFiles] = useContext(AudioContext);
+  const [audiosList, playBackObj, soundObjt, currentAudio, setAudioStates] =
+    useContext(AudioContext);
+
   const [media, setMedia] = useState([]);
+  const [modalIsVisible, setModalIsVisible] = useState({
+    optionModalVisible: false,
+  });
+  const [currentItem, setCurrentItem] = useState({});
 
   const getItem = (data, index) => data[index];
-  const getItemCount = (data) => data.length;
+  const getItemCount = (data) => 10;
+
+  const handleOnClose = () => {
+    setModalIsVisible({ ...modalIsVisible, optionModalVisible: false });
+  };
+
+  const handleAudioPress = async (audio) => {
+    //Play
+    if (soundObjt === null) {
+      const { uri } = audio;
+      const playBackObj = new Audio.Sound();
+
+      const status = await play(playBackObj, uri);
+
+      return setAudioStates((current) => {
+        return {
+          ...current,
+          currentAudio: audio,
+          playBackObj: playBackObj,
+          soundObjt: status,
+        };
+      });
+    }
+
+    // Pause
+    if (
+      soundObjt.isLoaded &&
+      soundObjt.isPlaying &&
+      currentAudio.id == audio.id
+    ) {
+      const status = await pause(playBackObj);
+
+      return setAudioStates((current) => {
+        return {
+          ...current,
+          soundObjt: status,
+        };
+      });
+    }
+
+    // resume
+    if (soundObjt.isLoaded && !soundObjt.isPlaying) {
+      const status = await resume(playBackObj);
+
+      return setAudioStates((current) => {
+        return {
+          ...current,
+          soundObjt: status,
+        };
+      });
+    }
+
+    //
+  };
 
   useEffect(() => {
     if (audiosList.assets) {
@@ -27,18 +89,21 @@ const AudioList = () => {
   }, [audiosList]);
 
   function renderItem({ item }) {
-    return <AudioComponent name={item.filename} minute={item.duration} />;
+    return (
+      <AudioComponent
+        name={item.filename}
+        minute={item.duration}
+        onAudioPress={() => handleAudioPress(item)}
+        onOptionPress={() => {
+          setCurrentItem(item);
+          setModalIsVisible({ ...modalIsVisible, optionModalVisible: true });
+        }}
+      />
+    );
   }
 
   return (
     <S.Wrapper color={colors.background}>
-      {/*  <FlatList
-        data={media}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        initialNumToRender={10}
-      /> */}
-
       {media.length > 0 && (
         <VirtualizedList
           data={media}
@@ -49,6 +114,13 @@ const AudioList = () => {
           getItem={getItem}
         />
       )}
+
+      <OptionModal
+        currentItem={currentItem}
+        onClose={handleOnClose}
+        visible={modalIsVisible.optionModalVisible}
+        colors={colors}
+      />
     </S.Wrapper>
   );
 };
