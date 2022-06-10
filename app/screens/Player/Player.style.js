@@ -1,8 +1,18 @@
 import styled from "styled-components/native";
 
 export const Wrapper = styled.View`
-  background-color: #f1f1f1;
   flex: 1;
-  justify-content: center;
+`;
+
+export const WrapperHeader = styled.View`
+  width: 100%;
+  padding: 20px 10px 10px;
   align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+`;
+
+export const Title = styled.Text`
+  color: #fff;
+  font-size: 18px;
 `;
