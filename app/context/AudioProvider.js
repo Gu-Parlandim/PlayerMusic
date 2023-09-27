@@ -15,6 +15,8 @@ const AudioProvider = ({ children }) => {
     currentAudioIndex: null,
     isPlaying: false,
   });
+  const [Offset, setOffset] = useState(null);
+  const limit = 20;
 
   function orderArray(a, b) {
     if (a.filename > b.filename) {
@@ -27,7 +29,7 @@ const AudioProvider = ({ children }) => {
     return 0;
   }
 
-  const getAudioFiles = async () => {
+  const getAudioFiles = async (Offset = null) => {
     MediaLibrary.getAssetsAsync({
       mediaType: "audio",
     })
@@ -42,6 +44,16 @@ const AudioProvider = ({ children }) => {
       })
       .catch((error) => console.log(error));
   };
+
+  /*  const getMoreAudios = () => {
+    if (Offset === null) {
+      setOffset(limit);
+      getAudioFiles(limit.toString());
+    } else {
+      setOffset(Offset + limit);
+      getAudioFiles((Offset + limit).toString());
+    }
+  }; */
 
   useEffect(() => {
     getPermission(permissionAlert, getAudioFiles);

@@ -8,6 +8,7 @@ import getAudiosMP3 from "../../services/getAudiosMP3";
 import OptionModal from "../../components/OptionModal";
 import { Audio } from "expo-av";
 import { play, pause, resume, playNext } from "../../services/audioController";
+import BigList from "react-native-big-list";
 
 const AudioList = () => {
   const { colors } = useTheme();
@@ -28,7 +29,7 @@ const AudioList = () => {
   const [currentItem, setCurrentItem] = useState({});
 
   const getItem = (data, index) => data[index];
-  const getItemCount = (data) => 20;
+  const getItemCount = (data) => data.length;
 
   const handleOnClose = () => {
     setModalIsVisible({ ...modalIsVisible, optionModalVisible: false });
@@ -104,6 +105,7 @@ const AudioList = () => {
 
   useEffect(() => {
     if (audiosList) {
+      console.log("audiosList", audiosList.length);
       setMedia(getAudiosMP3(audiosList));
     }
   }, [audiosList]);
@@ -126,7 +128,7 @@ const AudioList = () => {
 
   return (
     <S.Wrapper color={colors.background}>
-      {media.length > 0 && (
+      {/* media.length > 0 && (
         <VirtualizedList
           data={media}
           initialNumToRender={5}
@@ -134,8 +136,9 @@ const AudioList = () => {
           keyExtractor={(item) => item.id}
           getItemCount={getItemCount}
           getItem={getItem}
-        />
-      )}
+        /> */}
+
+      {<BigList data={media} renderItem={renderItem} itemHeight={50} />}
 
       <OptionModal
         currentItem={currentItem}
